@@ -14,12 +14,28 @@ def find_sublists(L: list[int], t: int) -> list[list[int]]:
         
     
     # Si t es 1 y 1 en L:
+    """
     if t == 1 and 1 in L:
-        retorno = []
+        retorno = [[]]
         for i in range(0, L.count(1)):
-            retorno.append(1)
+            retorno[0].append(1)
         
-        return [retorno]
+        retorno.append([1])
+        return retorno
+    """
+    # Crear combinaciones de unos
+    unoCount = L.count(1)
+    combinacionesUno = []
+    for n in range(1, unoCount + 2):
+        nuevaCombinacionUno = []
+        for i in range(0, n - 1):
+            nuevaCombinacionUno.append(1)
+        
+        if len(nuevaCombinacionUno) >= 1:
+            combinacionesUno.append(nuevaCombinacionUno)
+    
+    if t == 1 and 1 in L:
+        return combinacionesUno
 
     # Primer paso: ordenar la lista
     # L.sort()
@@ -39,8 +55,6 @@ def find_sublists(L: list[int], t: int) -> list[list[int]]:
                     primosMenoresQueT.remove(n)
         
         d += 1
-    
-    print(f'Lista numeros: {primosMenoresQueT}')
 
     # Descomposición en factores primos
     listaPrimos = []
@@ -55,8 +69,6 @@ def find_sublists(L: list[int], t: int) -> list[list[int]]:
 
         if i == len(primosMenoresQueT):
             break
-    
-    print(f'Lista factores primos {listaPrimos}')
 
     # Si no tiene factores primos, es decir, es primo, devolver si está contenido en L
     if len(listaPrimos) == 0 and t in L:
@@ -84,7 +96,7 @@ def find_sublists(L: list[int], t: int) -> list[list[int]]:
         nivelesCalculados += 1
 
     # print(f'listaDeSublistas: {listaListasAProbar}')
-    print(f'listaDeSublistas: {listaListasAProbar}')
+    #print(f'listaDeSublistas: {listaListasAProbar}')
 
     # Eliminar las lostas repetidas del último nivel
     listaListasAProbar[-1] = [listaListasAProbar[-1][0]]
@@ -94,7 +106,7 @@ def find_sublists(L: list[int], t: int) -> list[list[int]]:
         for sublista in nivel:
             sublistasAProbar.append(sublista)
 
-    print(f'Listas a probar {sublistasAProbar}')
+    #print(f'Listas a probar {sublistasAProbar}')
 
     
     # Verificar si es una sublista
@@ -124,11 +136,31 @@ def find_sublists(L: list[int], t: int) -> list[list[int]]:
         lista.sort()
     
     # Si L contiene 1, añadir 1 a todas las sublistas conocidas
+    """
     sublistasMasUno = sublistas.copy()
     if 1 in L:
         for lista in sublistas:
             sublistasMasUno.append(lista.copy())
             sublistasMasUno[-1].append(1)
+    """
 
+    # Añadir los unos
+    # Aplicar las combinaciones de 1 a todas las sublistas creadas
+    sublistasMasUno = []
+    for i, lista in enumerate(sublistas):
+        sublistasMasUno.append(lista)
+        
+        for unoComb in combinacionesUno:
+            sublistasMasUno.append(lista + unoComb)
     
     return sublistasMasUno
+
+
+# Caso 3
+print(find_sublists([1, 1, 2, 3, 5, 8, 11, 11, 13, 17, 19, 55], 55))
+
+# Caso 4
+print(find_sublists([1, 1, 2, 3, 5, 8, 11, 11, 13, 17, 19, 55], 110))
+
+# Caso 7
+print(find_sublists([1, 1, 1], 1))
