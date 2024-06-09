@@ -1,6 +1,47 @@
 from math import ceil
+from typing import Union
 
-def find_sublists(L: list[int], t: int) -> list[list[int]]:
+def find_sublist():
+    pass
+
+
+def calcularPrimos(t: int) -> list[int]:
+    # Definir el límite
+    limite = ceil(t / 2)
+
+    # Tercer paso: criba
+    numerosMenoresQueT = list(range(1, limite + 1))
+    primosMenoresQueT = numerosMenoresQueT.copy()
+    d = 0
+    while primosMenoresQueT[d] ** 2 < limite:
+        for n in primosMenoresQueT:
+            if n != d:
+                if n % primosMenoresQueT[d] == 0:
+                    primosMenoresQueT.remove(n)
+        
+        d += 1
+    
+    #print(f'Lista numeros: {primosMenoresQueT}')
+
+    # Descomposición en factores primos
+    listaPrimos = []
+    # tTemp = t
+    i = 0
+    while True:
+        if t % primosMenoresQueT[i] == 0:
+            listaPrimos.append(primosMenoresQueT[i])
+            t /= primosMenoresQueT[i]
+        else:
+            i += 1
+
+        if i == len(primosMenoresQueT):
+            break
+    
+    #print(f'Lista factores primos {listaPrimos}')
+    return listaPrimos
+
+
+def validar(L: list[int], t: int) -> Union[list[int | None]]:
     if len(L) == 0: # Si la lista está vacía, retornar lista vacía
         return []
     
@@ -9,59 +50,13 @@ def find_sublists(L: list[int], t: int) -> list[list[int]]:
     
     # Verificar que los números en L sean positivos
     for n in L:
-        if n < 0:
+        if n < 0 or n % int(n) != 0:
             raise Exception("Error: los números deben ser estrictamente positivos y sin cifras decimales")
-        
     
-    # Si t es 1 y 1 en L:
-    if t == 1 and 1 in L:
-        retorno = []
-        for i in range(0, L.count(1)):
-            retorno.append(1)
-        
-        return [retorno]
+    return None
 
-    # Primer paso: ordenar la lista
-    # L.sort()
 
-    # Segundo paso: establecer eliminación, t/2
-    limit = ceil(t / 2)
-    
-    # Tercer paso: criba
-    numerosMenoresQueT = list(range(1, limit + 1))
-    primosMenoresQueT = numerosMenoresQueT.copy()
-    d = 0
-    while primosMenoresQueT[d] ** 2 < limit:
-    #while d < limit:
-        for n in primosMenoresQueT:
-            if n != d:
-                if n % primosMenoresQueT[d] == 0:
-                    primosMenoresQueT.remove(n)
-        
-        d += 1
-    
-    print(f'Lista numeros: {primosMenoresQueT}')
-
-    # Descomposición en factores primos
-    listaPrimos = []
-    tTemp = t
-    i = 0
-    while True:
-        if tTemp % primosMenoresQueT[i] == 0:
-            listaPrimos.append(primosMenoresQueT[i])
-            tTemp /= primosMenoresQueT[i]
-        else:
-            i += 1
-
-        if i == len(primosMenoresQueT):
-            break
-    
-    print(f'Lista factores primos {listaPrimos}')
-
-    # Si no tiene factores primos, es decir, es primo, devolver si está contenido en L
-    if len(listaPrimos) == 0 and t in L:
-        return [[t], [1, t]]
-
+def determinarSublistas(listaPrimos: list[int], L: list[int]):
     # Crear sublistas a probar
     sublistasAProbar = []
     listaListasAProbar = [[listaPrimos]]
@@ -85,9 +80,6 @@ def find_sublists(L: list[int], t: int) -> list[list[int]]:
 
     # print(f'listaDeSublistas: {listaListasAProbar}')
     print(f'listaDeSublistas: {listaListasAProbar}')
-
-    # Eliminar las lostas repetidas del último nivel
-    listaListasAProbar[-1] = [listaListasAProbar[-1][0]]
 
     # concentrar las sublistas en sublistasAProbar
     for nivel in listaListasAProbar:
@@ -119,16 +111,11 @@ def find_sublists(L: list[int], t: int) -> list[list[int]]:
         if len(sublistaTemp) == 0:
             sublistas.append(sublista)
     
-
     for lista in sublistas:
         lista.sort()
     
-    # Si L contiene 1, añadir 1 a todas las sublistas conocidas
-    sublistasMasUno = sublistas.copy()
-    if 1 in L:
-        for lista in sublistas:
-            sublistasMasUno.append(lista.copy())
-            sublistasMasUno[-1].append(1)
+    return sublistas
 
-    
-    return sublistasMasUno
+print(calcularPrimos(100))
+print(validar([1, 2.3, -3, 4, 5], 3))
+print(validar([1, 2, 3, 4, 5], 3))
