@@ -1,10 +1,13 @@
 from unittest import TestCase, main
-from solucion import find_sublists as find_sublists_sol
+#from solucion import find_sublists as find_sublists_sol
 from find_sublist import find_sublists
 
+result_sol = {
+    
+}
 
 def check_sublist_correctness(L: list[int], t: int) -> None:
-    result_sol = find_sublists_sol(L, t)
+    #result_sol = find_sublists_sol(L, t)
     result = find_sublists(L, t)
     for sublist in result:
         sublist.sort()
@@ -12,7 +15,6 @@ def check_sublist_correctness(L: list[int], t: int) -> None:
     for sublist_sol in result_sol:
         sublist_sol.sort()
         assert sublist_sol in result, f"Error: {sublist_sol} not found"
-
 
 def there_is_value_error(L: list[int], t: int) -> bool:
     try:
